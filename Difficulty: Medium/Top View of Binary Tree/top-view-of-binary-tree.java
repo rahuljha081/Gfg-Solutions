@@ -26,7 +26,6 @@ class Solution {
         Queue<Pair> q=new LinkedList<>();
         TreeMap<Integer,Integer> map=new TreeMap<>();
         q.add(new Pair(0,root));
-        map.put(0,root.data);
         while(!q.isEmpty()){
             int size=q.size();
             while(size>0){
