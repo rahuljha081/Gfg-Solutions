@@ -1,10 +1,10 @@
 class Solution {
     class Pair{
         int node;
-        int dis;
-        Pair(int node,int dis){
+        int distance;
+        Pair(int node,int distance){
             this.node=node;
-            this.dis=dis;
+            this.distance=distance;
         }
     }
     public int[] dijkstra(int V, int[][] edges, int src) {
@@ -16,25 +16,27 @@ class Solution {
         for(int i=0;i<edges.length;i++){
             int from=edges[i][0];
             int to=edges[i][1];
-            int wt=edges[i][2];
-            adj.get(from).add(new Pair(to,wt));
-            adj.get(to).add(new Pair(from,wt));
+            int dis=edges[i][2];
+            adj.get(from).add(new Pair(to,dis));
+            adj.get(to).add(new Pair(from,dis));
         }
         int dist[]=new int[V];
-        Arrays.fill(dist,Integer.MAX_VALUE);
+        for(int i=0;i<V;i++){
+            dist[i]=Integer.MAX_VALUE;
+        }
         dist[src]=0;
-        PriorityQueue<Pair> pq=new PriorityQueue<>((a,b)->a.dis-b.dis);
-        pq.add(new Pair(src,0));
-        while(!pq.isEmpty()){
-            Pair p=pq.poll();
+        PriorityQueue<Pair> q=new PriorityQueue<>((a,b)->a.distance-b.distance);
+        q.add(new Pair(src,0));
+        while(!q.isEmpty()){
+            Pair p=q.poll();
             int curr_node=p.node;
-            int curr_dist=p.dis;
+            int curr_dist=p.distance;
             for(int i=0;i<adj.get(curr_node).size();i++){
-                int neigh_node=adj.get(curr_node).get(i).node;
-                int neigh_wt=adj.get(curr_node).get(i).dis;
-                if(dist[neigh_node]>curr_dist+neigh_wt){
-                    dist[neigh_node]=curr_dist+neigh_wt;
-                    pq.add(new Pair(neigh_node,curr_dist+neigh_wt));
+                int new_node=adj.get(curr_node).get(i).node;
+                int new_dist=adj.get(curr_node).get(i).distance;
+                if(dist[new_node]>curr_dist+new_dist){
+                    dist[new_node]=curr_dist+new_dist;
+                    q.add(new Pair(new_node,curr_dist+new_dist));
                 }
             }
         }
