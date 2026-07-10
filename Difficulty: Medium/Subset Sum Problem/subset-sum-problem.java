@@ -1,26 +1,38 @@
 class Solution {
-
-    static Boolean isSubsetSum(int arr[], int sum) {
-        int n = arr.length;
-
-        boolean[][] dp = new boolean[n + 1][sum + 1];
-
-        // sum 0 hamesha possible hai
-        for (int i = 0; i <= n; i++) {
-            dp[i][0] = true;
-        }
-
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= sum; j++) {
-
-                dp[i][j] = dp[i - 1][j]; // not take
-
-                if (j >= arr[i - 1]) {
-                    dp[i][j] = dp[i][j] || dp[i - 1][j - arr[i - 1]];
-                }
+    static boolean solve(int arr[],int sum,int n,int i,int dp[][]){
+        if(i==n){
+            if(sum==0) {
+                return true;
+            }else{
+                return false;
             }
         }
-
-        return dp[n][sum];
+        if(dp[i][sum]!=-1){
+            if(dp[i][sum]==1) return true;
+            return false;
+        }
+        boolean take=false;
+        if(arr[i]<=sum){
+            take=solve(arr,sum-arr[i],n,i+1,dp);
+        }
+        
+        boolean skip=solve(arr,sum,n,i+1,dp);
+        if(take||skip){
+            dp[i][sum]=1;
+        }else{
+            dp[i][sum]=0;
+        }
+        return take||skip;
+        
+    }
+    static Boolean isSubsetSum(int arr[], int sum) {
+        // code here
+        int dp[][]=new int[arr.length+1][sum+1];
+        for(int i=0;i<arr.length+1;i++){
+            for(int j=0;j<sum+1;j++){
+                dp[i][j]=-1;
+            }
+        }
+        return solve(arr,sum,arr.length,0,dp);
     }
 }
